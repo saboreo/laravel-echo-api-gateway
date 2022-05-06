@@ -20,11 +20,11 @@ advised to only use this package for non-critical / non-production projects.
 
 In order to use this package, your project needs to meet the following criteria:
 
-- PHP 7.4 or 8.x
-- Laravel 6, 7 or 8
-- Uses either [bref](https://bref.sh) or [Laravel Vapor](https://vapor.laravel.com) to deploy to AWS
-- Has a working queue
-- Uses Laravel Mix or any other tool to bundle your assets
+-   PHP 8.x
+-   Laravel 9
+-   Uses either [bref](https://bref.sh) or [Laravel Vapor](https://vapor.laravel.com) to deploy to AWS
+-   Has a working queue
+-   Uses Laravel Mix or any other tool to bundle your assets
 
 ## Installation
 
@@ -106,10 +106,18 @@ provider:
     iamRoleStatements:
         # Add this iamRoleStatement
         - Effect: Allow
-          Action: [ dynamodb:Query, dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem, dynamodb:DeleteItem, dynamodb:BatchWriteItem ]
+          Action:
+              [
+                  dynamodb:Query,
+                  dynamodb:GetItem,
+                  dynamodb:PutItem,
+                  dynamodb:UpdateItem,
+                  dynamodb:DeleteItem,
+                  dynamodb:BatchWriteItem,
+              ]
           Resource:
               - !GetAtt ConnectionsTable.Arn
-              - !Join [ '', [ !GetAtt ConnectionsTable.Arn, '/index/*' ] ]
+              - !Join ["", [!GetAtt ConnectionsTable.Arn, "/index/*"]]
 ```
 
 Add an environment variable to autogenerate our websocket URL:
@@ -189,13 +197,13 @@ LARAVEL_ECHO_API_GATEWAY_API_STAGE=your-api-stage-name
 Add to your javascript file:
 
 ```js
-import Echo from 'laravel-echo';
-import {broadcaster} from 'laravel-echo-api-gateway';
+import Echo from "laravel-echo";
+import { broadcaster } from "laravel-echo-api-gateway";
 
 window.Echo = new Echo({
     broadcaster,
     // replace the placeholders
-    host: 'wss://{api-ip}.execute-api.{region}.amazonaws.com/{stage}',
+    host: "wss://{api-ip}.execute-api.{region}.amazonaws.com/{stage}",
 });
 ```
 
